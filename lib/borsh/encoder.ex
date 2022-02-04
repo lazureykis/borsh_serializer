@@ -1,15 +1,32 @@
 defmodule Borsh.Encoder do
-  def encode_struct(struct) when is_struct(struct) do
-    struct.__struct__ |> IO.inspect(label: "struct.__struct__")
+  def encode_struct(data) when is_struct(data) do
+    # struct.__struct__ |> IO.inspect(label: "struct.__struct__")
 
-    {:struct, struct_schema} = apply(struct.__struct__, :borsh_schema, [])
+    struct_schema = apply(data.__struct__, :borsh_schema, [])
     # struct_schema = full_schema |> Map.fetch!(struct.__struct__)
+
+    # encode_field(struct_schema, data)
 
     struct_schema
     |> Enum.reduce(<<>>, fn field_def, acc ->
       {field_name, type} = field_def |> IO.inspect(label: "field schema")
       field_name |> IO.inspect(label: "field_name")
-      field_data = Map.fetch!(struct, field_name) |> IO.inspect(label: "field_data")
+      field_data = Map.fetch!(data, field_name) |> IO.inspect(label: "field_data")
+
+      acc <> encode_field(type, field_data)
+    end)
+  end
+
+  # Struct
+
+  def encode_field({:struct, struct_name}, data) do
+    struct_schema = apply(struct_name, :borsh_schema, [])
+
+    struct_schema
+    |> Enum.reduce(<<>>, fn field_def, acc ->
+      {field_name, type} = field_def |> IO.inspect(label: "field schema")
+      field_name |> IO.inspect(label: "field_name")
+      field_data = Map.fetch!(data, field_name) |> IO.inspect(label: "field_data")
 
       acc <> encode_field(type, field_data)
     end)

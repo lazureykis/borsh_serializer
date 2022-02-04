@@ -2,12 +2,11 @@ defmodule Person do
   defstruct id: 123, name: "John", email: "john@gmail.com"
 
   def borsh_schema do
-    {:struct,
-     [
-       {:id, :u16},
-       {:name, :string},
-       {:email, :string}
-     ]}
+    [
+      {:id, :u16},
+      {:name, :string},
+      {:email, :string}
+    ]
   end
 end
 
@@ -17,12 +16,11 @@ defmodule Creator do
             verified: 0
 
   def borsh_schema do
-    {:struct,
-     [
-       {:address, {:binary, _bytes = 32}},
-       {:verified, :u8},
-       {:share, :u8}
-     ]}
+    [
+      {:address, {:binary, _bytes = 32}},
+      {:verified, :u8},
+      {:share, :u8}
+    ]
   end
 
   # [
@@ -46,14 +44,13 @@ defmodule Data do
             creators: []
 
   def borsh_schema do
-    {:struct,
-     [
-       {:name, :string},
-       {:symbol, :string},
-       {:uri, :string},
-       {:seller_fee_basis_points, :u16},
-       {:creators, {:option, {:array, Creator}}}
-     ]}
+    [
+      {:name, :string},
+      {:symbol, :string},
+      {:uri, :string},
+      {:seller_fee_basis_points, :u16},
+      {:creators, {:option, {:array, {:struct, Creator}}}}
+    ]
   end
 
   # [
@@ -82,16 +79,15 @@ defmodule Metadata do
             edition_nonce: nil
 
   def borsh_schema do
-    {:struct,
-     [
-       {:key, :u8},
-       {:update_authority, {:binary, 32}},
-       {:mint, {:binary, 32}},
-       {:data, Data},
-       {:primary_sale_happened, :u8},
-       {:is_mutable, :u8},
-       {:edition_nonce, {:option, :u8}}
-     ]}
+    [
+      {:key, :u8},
+      {:update_authority, {:binary, 32}},
+      {:mint, {:binary, 32}},
+      {:data, {:struct, Data}},
+      {:primary_sale_happened, :u8},
+      {:is_mutable, :u8},
+      {:edition_nonce, {:option, :u8}}
+    ]
   end
 
   #
