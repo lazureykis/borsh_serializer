@@ -49,8 +49,7 @@ defmodule Data do
       {:symbol, :string},
       {:uri, :string},
       {:seller_fee_basis_points, :u16},
-      {:creators, {:array, Creator}}
-      # {:creators, {:option, {:array, Creator}}}
+      {:creators, {:option, {:array, Creator}}}
     ]
   end
 
@@ -82,8 +81,8 @@ defmodule Metadata do
   def borsh_schema do
     [
       {:key, :u8},
-      {:update_authority, {:binary, 256}},
-      {:mint, {:binary, 256}},
+      {:update_authority, {:binary, 32}},
+      {:mint, {:binary, 32}},
       {:data, Data},
       {:primary_sale_happened, :u8},
       {:is_mutable, :u8},
@@ -165,6 +164,39 @@ defmodule Borsh do
     }
 
     Borsh.Encoder.encode(data)
+    |> IO.inspect(label: "DATA")
+  end
+
+  def test_encoder_with_metadata do
+    address =
+      Base58.decode("D1yTsfytXgUFaiHh9gFJXPwxFFSvV63XVFN4ti2C56nf")
+      |> IO.inspect(label: "Metadata address")
+
+    IO.puts("byte_size(address) #{byte_size(address)}")
+
+    creator =
+      %Creator{address: address, share: 100_000, verified: 0} |> IO.inspect(label: "creator")
+
+    data = %Data{
+      name: "Token #1",
+      symbol: "",
+      uri: "https://somethere.com",
+      seller_fee_basis_points: 500,
+      creators: [creator]
+    }
+
+    metadata = %Metadata{
+      key: 0,
+      authority: address,
+      update_authority: address,
+      mint: address,
+      data: data,
+      primary_sale_happened: 1,
+      is_mutable: 0,
+      edition_nonce: nil
+    }
+
+    Borsh.Encoder.encode(metadata)
     |> IO.inspect(label: "DATA")
   end
 end

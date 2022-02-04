@@ -109,4 +109,13 @@ defmodule Borsh.Encoder do
       end
     end)
   end
+
+  # optional field
+  def encode_field({:option, field_def}, data) do
+    if data do
+      encode_field(:u8, 1) <> encode_field(field_def, data)
+    else
+      encode_field(:u8, 0)
+    end
+  end
 end
