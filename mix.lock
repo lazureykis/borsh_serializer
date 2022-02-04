@@ -1,0 +1,3 @@
+%{
+  "b58": {:hex, :b58, "1.0.2", "d758f42d89fbe84052f18b2f310bed2a8c8c5b38dd0af86970026974cc7daeda", [:mix], [], "hexpm", "148e299e2753eae222b13f399f461a0c4910fed608b8723fca3c33d1d4f82c17"},
+}
