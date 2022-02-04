@@ -49,7 +49,8 @@ defmodule Data do
       {:symbol, :string},
       {:uri, :string},
       {:seller_fee_basis_points, :u16},
-      {:creators, {:option, {:array, Creator}}}
+      {:creators, {:array, Creator}}
+      # {:creators, {:option, {:array, Creator}}}
     ]
   end
 
@@ -142,6 +143,28 @@ defmodule Borsh do
       %Creator{address: address, share: 100_000, verified: 0} |> IO.inspect(label: "creator")
 
     Borsh.Encoder.encode(creator)
+    |> IO.inspect(label: "DATA")
+  end
+
+  def test_encoder_with_data do
+    address =
+      Base58.decode("D1yTsfytXgUFaiHh9gFJXPwxFFSvV63XVFN4ti2C56nf")
+      |> IO.inspect(label: "Metadata address")
+
+    IO.puts("byte_size(address) #{byte_size(address)}")
+
+    creator =
+      %Creator{address: address, share: 100_000, verified: 0} |> IO.inspect(label: "creator")
+
+    data = %Data{
+      name: "Token #1",
+      symbol: "",
+      uri: "https://somethere.com",
+      seller_fee_basis_points: 500,
+      creators: [creator]
+    }
+
+    Borsh.Encoder.encode(data)
     |> IO.inspect(label: "DATA")
   end
 end
