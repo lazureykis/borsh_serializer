@@ -1,8 +1,8 @@
 defmodule Borsh.Encoder do
-  def encode(struct) when is_struct(struct) do
+  def encode_struct(struct) when is_struct(struct) do
     struct.__struct__ |> IO.inspect(label: "struct.__struct__")
 
-    struct_schema = apply(struct.__struct__, :borsh_schema, [])
+    {:struct, struct_schema} = apply(struct.__struct__, :borsh_schema, [])
     # struct_schema = full_schema |> Map.fetch!(struct.__struct__)
 
     struct_schema
@@ -33,6 +33,10 @@ defmodule Borsh.Encoder do
     <<num::little-integer-size(64)>>
   end
 
+  def encode_field(:u128, num) do
+    <<num::little-integer-size(128)>>
+  end
+
   # Integer
 
   def encode_field(:i8, num) do
@@ -49,6 +53,10 @@ defmodule Borsh.Encoder do
 
   def encode_field(:i64, num) do
     <<num::little-integer-signed-size(64)>>
+  end
+
+  def encode_field(:i128, num) do
+    <<num::little-integer-signed-size(128)>>
   end
 
   # Float
@@ -87,7 +95,7 @@ defmodule Borsh.Encoder do
 
     Enum.reduce(data, array_len_encoded, fn field_value, acc ->
       if is_struct(field_value) do
-        acc <> encode(field_value)
+        acc <> encode_struct(field_value)
       else
         encoded_el = encode_field(field_type, field_value)
         acc <> encoded_el
@@ -102,7 +110,7 @@ defmodule Borsh.Encoder do
 
     Enum.reduce(data, array_len_encoded, fn field_value, acc ->
       if is_struct(field_value) do
-        acc <> encode(field_value)
+        acc <> encode_struct(field_value)
       else
         encoded_el = encode_field(field_type, field_value)
         acc <> encoded_el

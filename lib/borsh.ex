@@ -2,11 +2,12 @@ defmodule Person do
   defstruct id: 123, name: "John", email: "john@gmail.com"
 
   def borsh_schema do
-    [
-      {:id, :u16},
-      {:name, :string},
-      {:email, :string}
-    ]
+    {:struct,
+     [
+       {:id, :u16},
+       {:name, :string},
+       {:email, :string}
+     ]}
   end
 end
 
@@ -16,11 +17,12 @@ defmodule Creator do
             verified: 0
 
   def borsh_schema do
-    [
-      {:address, {:binary, _bytes = 32}},
-      {:verified, :u8},
-      {:share, :u8}
-    ]
+    {:struct,
+     [
+       {:address, {:binary, _bytes = 32}},
+       {:verified, :u8},
+       {:share, :u8}
+     ]}
   end
 
   # [
@@ -44,13 +46,14 @@ defmodule Data do
             creators: []
 
   def borsh_schema do
-    [
-      {:name, :string},
-      {:symbol, :string},
-      {:uri, :string},
-      {:seller_fee_basis_points, :u16},
-      {:creators, {:option, {:array, Creator}}}
-    ]
+    {:struct,
+     [
+       {:name, :string},
+       {:symbol, :string},
+       {:uri, :string},
+       {:seller_fee_basis_points, :u16},
+       {:creators, {:option, {:array, Creator}}}
+     ]}
   end
 
   # [
@@ -79,15 +82,16 @@ defmodule Metadata do
             edition_nonce: nil
 
   def borsh_schema do
-    [
-      {:key, :u8},
-      {:update_authority, {:binary, 32}},
-      {:mint, {:binary, 32}},
-      {:data, Data},
-      {:primary_sale_happened, :u8},
-      {:is_mutable, :u8},
-      {:edition_nonce, {:option, :u8}}
-    ]
+    {:struct,
+     [
+       {:key, :u8},
+       {:update_authority, {:binary, 32}},
+       {:mint, {:binary, 32}},
+       {:data, Data},
+       {:primary_sale_happened, :u8},
+       {:is_mutable, :u8},
+       {:edition_nonce, {:option, :u8}}
+     ]}
   end
 
   #
@@ -127,7 +131,7 @@ defmodule Borsh do
   def test_encoder_with_person do
     person = %Person{} |> IO.inspect(label: "person")
 
-    Borsh.Encoder.encode(person)
+    Borsh.Encoder.encode_struct(person)
     |> IO.inspect(label: "DATA")
   end
 
@@ -141,7 +145,7 @@ defmodule Borsh do
     creator =
       %Creator{address: address, share: 100_000, verified: 0} |> IO.inspect(label: "creator")
 
-    Borsh.Encoder.encode(creator)
+    Borsh.Encoder.encode_struct(creator)
     |> IO.inspect(label: "DATA")
   end
 
@@ -163,7 +167,7 @@ defmodule Borsh do
       creators: [creator]
     }
 
-    Borsh.Encoder.encode(data)
+    Borsh.Encoder.encode_struct(data)
     |> IO.inspect(label: "DATA")
   end
 
@@ -196,7 +200,7 @@ defmodule Borsh do
       edition_nonce: nil
     }
 
-    Borsh.Encoder.encode(metadata)
+    Borsh.Encoder.encode_struct(metadata)
     |> IO.inspect(label: "DATA")
   end
 end
