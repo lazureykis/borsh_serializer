@@ -75,6 +75,26 @@ defmodule Borsh.Encoder do
     <<data::binary-size(len)>>
   end
 
+  # Fixed sized array
+  def encode_field({:array, field_type, schema_array_length}, data) do
+    array_len = length(data)
+
+    if schema_array_length != array_len do
+      raise "Invalid array length"
+    end
+
+    array_len_encoded = encode_field(:u32, array_len)
+
+    Enum.reduce(data, array_len_encoded, fn field_value, acc ->
+      if is_struct(field_value) do
+        acc <> encode(field_value)
+      else
+        encoded_el = encode_field(field_type, field_value)
+        acc <> encoded_el
+      end
+    end)
+  end
+
   # Dynamic sized array
   def encode_field({:array, field_type}, data) do
     array_len = length(data)
