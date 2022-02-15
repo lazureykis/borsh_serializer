@@ -74,21 +74,7 @@ defmodule Borsh.Decoder do
   end
 
   # Fixed sized array
-  # def read_value(<<data::binary>>, {:array, field_type, schema_array_length}) do
-  #   Enum.reduce(data, array_len_encoded, fn field_value, acc ->
-  #     if is_struct(field_value) do
-  #       acc <> encode_struct(field_value)
-  #     else
-  #       encoded_el = encode_field(field_type, field_value)
-  #       acc <> encoded_el
-  #     end
-  #   end)
-  # end
-
-  # Dynamic sized array
-  def read_value(<<data::binary>>, {:array, field_type}) do
-    <<array_length::little-integer-size(32), data::binary>> = data
-
+  def read_value(<<data::binary>>, {:array, field_type, array_length}) do
     Enum.reduce(1..array_length, {_values = [], data}, fn _, {values, data} ->
       {value, rest} = read_value(data, field_type)
       value |> IO.inspect(label: "VALUE READ")
@@ -100,6 +86,13 @@ defmodule Borsh.Decoder do
       # end
     end)
     |> IO.inspect(label: "ARRAY VALUES")
+  end
+
+  # Dynamic sized array
+  def read_value(<<data::binary>>, {:array, field_type}) do
+    <<array_length::little-integer-size(32), rest::binary>> = data
+
+    read_value(rest, {:array, field_type, array_length})
   end
 
   # Optional field
