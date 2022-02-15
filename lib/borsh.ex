@@ -127,8 +127,15 @@ defmodule Borsh do
   def test_encoder_with_person do
     person = %Person{} |> IO.inspect(label: "person")
 
-    Borsh.Encoder.encode_struct(person)
-    |> IO.inspect(label: "DATA")
+    actual =
+      Borsh.Encoder.encode_struct(person)
+      |> IO.inspect(label: "DATA")
+
+    expected =
+      <<123, 0, 4, 0, 0, 0, 74, 111, 104, 110, 14, 0, 0, 0, 106, 111, 104, 110, 64, 103, 109, 97,
+        105, 108, 46, 99, 111, 109>>
+
+    expected == actual
   end
 
   def test_decoder_with_person do
@@ -138,6 +145,10 @@ defmodule Borsh do
 
     {person, rest_data} =
       Borsh.Decoder.decode_struct(data, Person) |> IO.inspect(label: "DECODE RESULT")
+
+    # expected = %Person{}
+    IO.puts("CORRECT: #{person == %Person{}}")
+    {person, rest_data}
   end
 
   def test_encoder_with_creator do
@@ -206,7 +217,22 @@ defmodule Borsh do
     }
 
     Borsh.Encoder.encode_struct(metadata)
-    |> IO.inspect(label: "DATA")
+    |> IO.inspect(label: "DATA", limit: 1000)
+  end
+
+  def test_decoder_with_metadata do
+    data =
+      <<0, 178, 140, 22, 31, 109, 202, 113, 117, 157, 158, 95, 157, 57, 209, 126, 57, 187, 19, 53,
+        107, 14, 33, 104, 242, 178, 150, 110, 195, 11, 81, 142, 188, 178, 140, 22, 31, 109, 202,
+        113, 117, 157, 158, 95, 157, 57, 209, 126, 57, 187, 19, 53, 107, 14, 33, 104, 242, 178,
+        150, 110, 195, 11, 81, 142, 188, 8, 0, 0, 0, 84, 111, 107, 101, 110, 32, 35, 49, 0, 0, 0,
+        0, 21, 0, 0, 0, 104, 116, 116, 112, 115, 58, 47, 47, 115, 111, 109, 101, 116, 104, 101,
+        114, 101, 46, 99, 111, 109, 244, 1, 1, 1, 0, 0, 0, 178, 140, 22, 31, 109, 202, 113, 117,
+        157, 158, 95, 157, 57, 209, 126, 57, 187, 19, 53, 107, 14, 33, 104, 242, 178, 150, 110,
+        195, 11, 81, 142, 188, 0, 160, 1, 0, 0>>
+
+    {metadata, rest_data} =
+      Borsh.Decoder.decode_struct(data, Metadata) |> IO.inspect(label: "DECODE RESULT")
   end
 
   def test_real_metadata do

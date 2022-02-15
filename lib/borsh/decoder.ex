@@ -54,29 +54,27 @@ defmodule Borsh.Decoder do
   def read_value(<<num::little-float-size(32), rest::binary>>, :f32), do: {num, rest}
   def read_value(<<num::little-float-size(64), rest::binary>>, :f64), do: {num, rest}
 
-  # # String
+  # String
 
   def read_value(<<string_length::little-integer-size(32), data::binary>>, :string) do
     <<string::binary-size(string_length), rest::binary>> = <<data::binary>>
     {string, rest}
   end
 
-  # # Binary
+  # Binary
 
-  # def encode_field({:binary, len}, data) do
-  #   <<data::binary-size(len)>>
-  # end
+  def read_value(<<data::binary>>, {:binary, byte_size}) do
+    <<value::binary-size(byte_size), rest::binary>> = <<data::binary>>
+    {value, rest}
+  end
 
-  # # Fixed sized array
-  # def encode_field({:array, field_type, schema_array_length}, data) do
-  #   array_len = length(data)
+  def read_value(<<data::binary>>, {:struct, module}) do
+    {value, rest} = decode_struct(data, module)
+    {value, rest}
+  end
 
-  #   if schema_array_length != array_len do
-  #     raise "Invalid array length"
-  #   end
-
-  #   array_len_encoded = encode_field(:u32, array_len)
-
+  # Fixed sized array
+  # def read_value(<<data::binary>>, {:array, field_type, schema_array_length}) do
   #   Enum.reduce(data, array_len_encoded, fn field_value, acc ->
   #     if is_struct(field_value) do
   #       acc <> encode_struct(field_value)
@@ -87,27 +85,42 @@ defmodule Borsh.Decoder do
   #   end)
   # end
 
-  # # Dynamic sized array
-  # def encode_field({:array, field_type}, data) do
-  #   array_len = length(data)
-  #   array_len_encoded = encode_field(:u32, array_len)
+  # Dynamic sized array
+  def read_value(<<data::binary>>, {:array, field_type}) do
+    <<array_length::little-integer-size(32), data::binary>> = data
 
-  #   Enum.reduce(data, array_len_encoded, fn field_value, acc ->
-  #     if is_struct(field_value) do
-  #       acc <> encode_struct(field_value)
-  #     else
-  #       encoded_el = encode_field(field_type, field_value)
-  #       acc <> encoded_el
-  #     end
-  #   end)
+    Enum.reduce(1..array_length, {_values = [], data}, fn _, {values, data} ->
+      {value, rest} = read_value(data, field_type)
+      value |> IO.inspect(label: "VALUE READ")
+      {values ++ [value], rest}
+      # if is_struct(field_value) do
+      #   decode_struct(field_value, field_type)
+      # else
+      #   read_value(field_type)
+      # end
+    end)
+    |> IO.inspect(label: "ARRAY VALUES")
+  end
+
+  # Optional field
+  # def read_value(data, {:option, _field_type}) do
+  #   IO.inspect(data, label: "OPTION FIELD")
+  #   nil
   # end
 
-  # # optional field
-  # def encode_field({:option, field_def}, data) do
-  #   if data do
-  #     encode_field(:u8, 1) <> encode_field(field_def, data)
-  #   else
-  #     encode_field(:u8, 0)
-  #   end
-  # end
+  # when has_value == 0 do
+  def read_value(<<has_value::little-integer-size(8), _data::binary>>, {:option, _field_type})
+      when has_value == 0 do
+    {<<>>, nil}
+  end
+
+  def read_value(<<has_value::little-integer-size(8)>>, {:option, _field_type})
+      when has_value == 0 do
+    {<<>>, nil}
+  end
+
+  def read_value(<<has_value::little-integer-size(8), data::binary>>, {:option, field_type})
+      when has_value == 1 do
+    read_value(data, field_type)
+  end
 end
