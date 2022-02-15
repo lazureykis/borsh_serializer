@@ -131,6 +131,15 @@ defmodule Borsh do
     |> IO.inspect(label: "DATA")
   end
 
+  def test_decoder_with_person do
+    data =
+      <<123, 0, 4, 0, 0, 0, 74, 111, 104, 110, 14, 0, 0, 0, 106, 111, 104, 110, 64, 103, 109, 97,
+        105, 108, 46, 99, 111, 109>>
+
+    {person, rest_data} =
+      Borsh.Decoder.decode_struct(data, Person) |> IO.inspect(label: "DECODE RESULT")
+  end
+
   def test_encoder_with_creator do
     address =
       Base58.decode("D1yTsfytXgUFaiHh9gFJXPwxFFSvV63XVFN4ti2C56nf")
@@ -198,5 +207,8 @@ defmodule Borsh do
 
     Borsh.Encoder.encode_struct(metadata)
     |> IO.inspect(label: "DATA")
+  end
+
+  def test_real_metadata do
   end
 end

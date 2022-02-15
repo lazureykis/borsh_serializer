@@ -2,7 +2,8 @@ defmodule Borsh.Encoder do
   def encode_struct(data) when is_struct(data) do
     # struct.__struct__ |> IO.inspect(label: "struct.__struct__")
 
-    struct_schema = apply(data.__struct__, :borsh_schema, [])
+    # struct_schema = apply(data.__struct__, :borsh_schema, [])
+    struct_schema = data.__struct__.borsh_schema()
     # struct_schema = full_schema |> Map.fetch!(struct.__struct__)
 
     # encode_field(struct_schema, data)
