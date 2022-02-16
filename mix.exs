@@ -47,7 +47,6 @@ defmodule Borsh.MixProject do
   defp deps do
     [
       {:b58, "~> 1.0.2"},
-      {:httpoison, "~> 1.8.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
