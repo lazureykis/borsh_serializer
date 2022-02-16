@@ -8,8 +8,8 @@ defmodule Borsh.Encoder do
 
   # Struct
 
-  def encode_field({:struct, struct_name}, data) do
-    struct_schema = apply(struct_name, :borsh_schema, [])
+  def encode_field({:struct, module}, data) do
+    struct_schema = module.borsh_schema()
 
     struct_schema
     |> Enum.reduce(<<>>, fn field_def, acc ->

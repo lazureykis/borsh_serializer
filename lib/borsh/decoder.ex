@@ -63,15 +63,14 @@ defmodule Borsh.Decoder do
 
   def read_value(<<data::binary>>, {:struct, module}) do
     struct_schema = module.borsh_schema()
-    ret = struct(module)
+    result = struct(module)
 
     struct_schema
-    |> Enum.reduce({ret, data}, fn field_def, {ret, data} ->
-      {field_name, type} = field_def
-
+    |> Enum.reduce({result, data}, fn {field_name, type}, {result, data} ->
       {value, data_rest} = read_value(data, type)
-      ret = Map.put(ret, field_name, value)
-      {ret, data_rest}
+
+      result = Map.put(result, field_name, value)
+      {result, data_rest}
     end)
   end
 
@@ -93,12 +92,12 @@ defmodule Borsh.Decoder do
   # Optional field
   def read_value(<<has_value::little-integer-size(8)>>, {:option, _field_type})
       when has_value == 0 do
-    {<<>>, ""}
+    {nil, <<>>}
   end
 
   def read_value(<<has_value::little-integer-size(8), rest::binary>>, {:option, _field_type})
       when has_value == 0 do
-    {<<>>, rest}
+    {nil, rest}
   end
 
   def read_value(<<has_value::little-integer-size(8), rest::binary>>, {:option, field_type})
