@@ -1,36 +1,55 @@
 defmodule Borsh.MixProject do
   use Mix.Project
 
+  @source_url "https://github.com/lazureykis/borsh_serializer"
+
   def project do
     [
-      app: :borsh,
+      app: :borsh_serializer,
+      name: "Borsh",
+      description: "Borsh is a binary serializer for security-critical projects.",
+      source_url: @source_url,
+      package: package(),
       version: "0.1.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
-      deps: deps()
+      deps: deps(),
+      docs: [
+        main: "readme",
+        # logo: "logo.png",
+        extras: [
+          "README.md"
+          # "CHANGELOG.md"
+        ]
+      ]
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Pavel Lazureykis"],
+      licenses: ["MIT"],
+      links: %{
+        # Changelog: @source_url <> "/blob/master/CHANGELOG.md",
+        GitHub: @source_url
+      }
     ]
   end
 
   defp elixirc_paths(:test), do: ["test/support", "lib"]
   defp elixirc_paths(_), do: ["lib"]
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
-    [
-      extra_applications: [:logger]
-    ]
+    []
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:b58, "~> 1.0.2"},
       {:httpoison, "~> 1.8.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false}
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
   end
 end
