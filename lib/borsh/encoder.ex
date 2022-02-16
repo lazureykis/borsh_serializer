@@ -1,21 +1,9 @@
 defmodule Borsh.Encoder do
+  @moduledoc """
+  Encodes Elixir data structures into binary list.
+  """
   def encode_struct(data) when is_struct(data) do
-    # struct.__struct__ |> IO.inspect(label: "struct.__struct__")
-
-    # struct_schema = apply(data.__struct__, :borsh_schema, [])
-    struct_schema = data.__struct__.borsh_schema()
-    # struct_schema = full_schema |> Map.fetch!(struct.__struct__)
-
-    # encode_field(struct_schema, data)
-
-    struct_schema
-    |> Enum.reduce(<<>>, fn field_def, acc ->
-      {field_name, type} = field_def |> IO.inspect(label: "field schema")
-      field_name |> IO.inspect(label: "field_name")
-      field_data = Map.fetch!(data, field_name) |> IO.inspect(label: "field_data")
-
-      acc <> encode_field(type, field_data)
-    end)
+    encode_field({:struct, data.__struct__}, data)
   end
 
   # Struct
@@ -25,15 +13,14 @@ defmodule Borsh.Encoder do
 
     struct_schema
     |> Enum.reduce(<<>>, fn field_def, acc ->
-      {field_name, type} = field_def |> IO.inspect(label: "field schema")
-      field_name |> IO.inspect(label: "field_name")
-      field_data = Map.fetch!(data, field_name) |> IO.inspect(label: "field_data")
+      {field_name, type} = field_def
+      field_data = Map.fetch!(data, field_name)
 
       acc <> encode_field(type, field_data)
     end)
   end
 
-  # Unsigned
+  # Unsigned integer
 
   def encode_field(:u8, num) do
     <<num::little-integer-size(8)>>
@@ -55,7 +42,7 @@ defmodule Borsh.Encoder do
     <<num::little-integer-size(128)>>
   end
 
-  # Integer
+  # Signed integer
 
   def encode_field(:i8, num) do
     <<num::little-integer-signed-size(8)>>
@@ -146,7 +133,7 @@ defmodule Borsh.Encoder do
     end)
   end
 
-  # optional field
+  # Optional field
   def encode_field({:option, field_def}, data) do
     if data do
       encode_field(:u8, 1) <> encode_field(field_def, data)

@@ -254,7 +254,7 @@ defmodule Borsh do
     #     82, 51, 99, 67, 117, 102, 119, 103, 117, 51, 99, 100, 76, 82, 116, 55, 113, 82, 121, 81,
     #     0, 160, 1, 0, 0>>
 
-    {metadata, rest_data} =
+    {_metadata, ""} =
       Borsh.Decoder.decode_struct(data, Metadata) |> IO.inspect(label: "DECODE RESULT")
   end
 

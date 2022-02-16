@@ -1,21 +1,10 @@
 defmodule Borsh.Decoder do
+  @moduledoc """
+  Decodes Borsh-encoded binary list into Elixir struct.
+  """
+
   def decode_struct(data, module) when is_binary(data) and is_atom(module) do
-    struct_schema = module.borsh_schema()
-    # struct_schema = full_schema |> Map.fetch!(struct.__struct__)
-
-    # encode_field(struct_schema, data)
-    ret = struct(module)
-
-    struct_schema
-    |> Enum.reduce({ret, data}, fn field_def, {ret, data} ->
-      {field_name, type} = field_def |> IO.inspect(label: "field schema")
-      field_name |> IO.inspect(label: "field_name")
-      # field_data = Map.fetch!(data, field_name) |> IO.inspect(label: "field_data")
-
-      {value, data_rest} = read_value(data, type)
-      ret = Map.put(ret, field_name, value)
-      {ret, data_rest}
-    end)
+    read_value(data, {:struct, module})
   end
 
   # Unsigned
@@ -67,9 +56,23 @@ defmodule Borsh.Decoder do
 
   # Struct
 
+  # def read_value(<<data::binary>>, {:struct, module}) do
+  #   {value, rest} = decode_struct(data, module)
+  #   {value, rest}
+  # end
+
   def read_value(<<data::binary>>, {:struct, module}) do
-    {value, rest} = decode_struct(data, module)
-    {value, rest}
+    struct_schema = module.borsh_schema()
+    ret = struct(module)
+
+    struct_schema
+    |> Enum.reduce({ret, data}, fn field_def, {ret, data} ->
+      {field_name, type} = field_def
+
+      {value, data_rest} = read_value(data, type)
+      ret = Map.put(ret, field_name, value)
+      {ret, data_rest}
+    end)
   end
 
   # Fixed sized array
