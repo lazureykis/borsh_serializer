@@ -6,24 +6,11 @@ defmodule Creator do
 
   def borsh_schema do
     [
-      # {:address, {:binary, _bytes = 32}},
       {:address, {:base58, 32}},
       {:verified, :u8},
       {:share, :u8}
     ]
   end
-
-  # [
-  #   Creator,
-  #   {
-  #     kind: 'struct',
-  #     fields: [
-  #       ['address', 'pubkeyAsString'],
-  #       ['verified', 'u8'],
-  #       ['share', 'u8'],
-  #     ],
-  #   },
-  # ],
 end
 
 defmodule Data do
@@ -43,20 +30,6 @@ defmodule Data do
       {:creators, {:option, {:array, {:struct, Creator}}}}
     ]
   end
-
-  # [
-  #   Data,
-  #   {
-  #     kind: 'struct',
-  #     fields: [
-  #       ['name', 'string'],
-  #       ['symbol', 'string'],
-  #       ['uri', 'string'],
-  #       ['sellerFeeBasisPoints', 'u16'],
-  #       ['creators', { kind: 'option', type: [Creator] }],
-  #     ],
-  #   },
-  # ],
 end
 
 defmodule Metadata do
@@ -91,19 +64,4 @@ defmodule Metadata do
       {:edition_nonce, {:option, :u8}}
     ]
   end
-
-  #
-  # Metadata,
-  #   {
-  #     kind: 'struct',
-  #     fields: [
-  #       ['key', 'u8'],
-  #       ['updateAuthority', 'pubkeyAsString'],
-  #       ['mint', 'pubkeyAsString'],
-  #       ['data', Data],
-  #       ['primarySaleHappened', 'u8'], // bool
-  #       ['isMutable', 'u8'], // bool
-  #       ['editionNonce', { kind: 'option', type: 'u8' }],
-  #     ],
-  #   },
 end
