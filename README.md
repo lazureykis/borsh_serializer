@@ -41,6 +41,8 @@ bindata = Borsh.encode(person)
 {person, ""} = Borsh.decode(bindata, Person)
 ```
 
+For complex data types take a look at [Metaplex Metadata schema](https://github.com/lazureykis/borsh_serializer/blob/master/test/support/metaplex_models.ex) I used for tests.
+
 ## Data Types
 
 To define schema you must implement `borsch_schema/0` method which returns a list of field definitions.
