@@ -60,8 +60,19 @@ defmodule Data do
 end
 
 defmodule Metadata do
+  @keys [
+    "Uninitialized",
+    "EditionV1",
+    "MasterEditionV1",
+    "ReservationListV1",
+    "MetadataV1",
+    "ReservationListV2",
+    "MasterEditionV2",
+    "EditionMarker"
+  ]
+
   @moduledoc false
-  defstruct key: 0,
+  defstruct key: "Uninitialized",
             update_authority: [],
             mint: [],
             data: %Data{},
@@ -71,10 +82,8 @@ defmodule Metadata do
 
   def borsh_schema do
     [
-      {:key, :u8},
-      # {:update_authority, {:binary, 32}},
+      {:key, {:enum, @keys}},
       {:update_authority, {:base58, 32}},
-      # {:mint, {:binary, 32}},
       {:mint, {:base58, 32}},
       {:data, {:struct, Data}},
       {:primary_sale_happened, :u8},

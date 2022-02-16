@@ -7,6 +7,16 @@ defmodule Borsh.Decoder do
     read_value(data, {:struct, module})
   end
 
+  # Enum
+
+  def read_value(<<index::little-integer-size(8), rest::binary>>, {:enum, values}) do
+    if index >= length(values) do
+      raise "Enum ${idx} is out of range"
+    end
+
+    {Enum.at(values, index), rest}
+  end
+
   # Unsigned
 
   def read_value(<<num::little-integer-size(8), rest::binary>>, :u8), do: {num, rest}

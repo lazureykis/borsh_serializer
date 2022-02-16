@@ -74,7 +74,7 @@ defmodule Borsh.MetaplexTest do
     }
 
     metadata = %Metadata{
-      key: 0,
+      key: "Uninitialized",
       update_authority: address,
       mint: address,
       data: data,
@@ -124,7 +124,7 @@ defmodule Borsh.MetaplexTest do
     }
 
     metadata = %Metadata{
-      key: 0,
+      key: "Uninitialized",
       update_authority: address,
       mint: address,
       data: data,
