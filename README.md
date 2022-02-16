@@ -50,23 +50,26 @@ bindata = Borsh.encode(person)
 To define schema you must implement `borsch_schema/0` method which returns a list of field definitions.
 Each field definition is a tuple `{:field_name, :field_type}`.
 
-Supported data types:
+Supported data types with examples:
 
-### Unsigned integers
-
-Supported unsigned integers from 8 to 128 bytes size: `:u8`, `:u16`, `:u32`, `:u64`, `:u128`.
-
-Example: `{:age, :u8}`, `{:counter, :u128}`
-
-
-### Signed integers
-
-Supported signed integers from 8 to 128 bytes size: `:i8`, `:i16`, `:i32`, `:i64`, `:i128`.
-
-Example: `{:amount, :i32}`
+```elixir
+# Unsigned integers: :u8, :u16, :u32, :u64, :u128
+{:age, :u8}
+{:counter, :u128}
 
 
-### Float numbers
-32 and 64 bytes size supported: `:f32`, `:f64`.
+# Signed integers: :i8, :i16, :i32, :i64, :i128
+{:amount, :i32}
 
-Example: `{:temp, :f32}`
+
+# Float numbers: :f32 and :f64
+{:temp, :f32}
+
+
+# String type: :string
+{:username, :string}
+
+
+# Enum values are encoded as u8 and are zero-indexed: {:enum, values}
+{:color, {:enum, ["red", "green", "blue"]}}
+```
