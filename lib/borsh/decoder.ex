@@ -1,6 +1,6 @@
 defmodule Borsh.Decoder do
   @moduledoc """
-  Decodes Borsh-encoded binary list into Elixir struct.
+  Decodes binary data into Elixir struct.
   """
 
   def decode_struct(data, module) when is_binary(data) and is_atom(module) do

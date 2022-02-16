@@ -1,16 +1,3 @@
-defmodule Person do
-  @moduledoc false
-  defstruct id: 123, name: "John", email: "john@gmail.com"
-
-  def borsh_schema do
-    [
-      {:id, :u16},
-      {:name, :string},
-      {:email, :string}
-    ]
-  end
-end
-
 defmodule Creator do
   @moduledoc false
   defstruct address: nil,

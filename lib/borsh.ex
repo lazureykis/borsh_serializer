@@ -4,15 +4,18 @@ defmodule Borsh do
   """
 
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Borsh.hello()
-      :world
-
+  Encodes Elixir struct into binary data.
   """
-  def hello do
-    :world
+  @spec encode(struct()) :: binary()
+  def encode(struct) do
+    Borsh.Encoder.encode_struct(struct)
+  end
+
+  @doc """
+  Decodes binary data into Elixir struct. Returns tuple with a struct and the rest of bytes.
+  """
+  @spec decode(binary(), atom()) :: {struct(), binary()}
+  def decode(data, module) when is_atom(module) and is_binary(data) do
+    Borsh.Decoder.decode_struct(data, module)
   end
 end

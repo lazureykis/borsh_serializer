@@ -1,6 +1,6 @@
 defmodule Borsh.Encoder do
   @moduledoc """
-  Encodes Elixir data structures into binary list.
+  Encodes Elixir data structures into binary data.
   """
   def encode_struct(data) when is_struct(data) do
     encode_field({:struct, data.__struct__}, data)
