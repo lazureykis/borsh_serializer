@@ -1,7 +1,9 @@
 # Borsh binary serializer
 
 
-[Borsh](https://borsh.io) is a binary serializer for security-critical projects. Supports base58 encoded binary fields (Solana public keys as strings).
+[Borsh](https://borsh.io) is a binary serializer for security-critical projects.
+
+`borsh_serializer` supports base58-encoded binary fields (Solana public keys as strings).
 
 ## Installation
 
@@ -19,7 +21,7 @@ end
 ## Usage
 
 ```elixir
-# Define struct:
+# Define struct and its borsh schema:
 
 defmodule Person do
   @moduledoc false
@@ -41,11 +43,11 @@ bindata = Borsh.encode(person)
 {person, ""} = Borsh.decode(bindata, Person)
 ```
 
-For complex data types take a look at [Metaplex Metadata schema](https://github.com/lazureykis/borsh_serializer/blob/master/test/support/metaplex_models.ex) I used for tests.
+For a complex example, take a look at [Metaplex Metadata schema](https://github.com/lazureykis/borsh_serializer/blob/master/test/support/metaplex_schema.ex) I used for tests.
 
 ## Data Types
 
-To define schema you must implement `borsch_schema/0` method which returns a list of field definitions.
+To define a schema, you must implement `borsh_schema/0` method, which returns a list of field definitions.
 Each field definition is a tuple `{:field_name, :field_type}`.
 
 Supported data types with examples:
