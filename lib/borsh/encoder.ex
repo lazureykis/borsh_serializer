@@ -112,9 +112,7 @@ defmodule Borsh.Encoder do
       raise "Invalid array length"
     end
 
-    array_len_encoded = encode_field(:u32, array_len)
-
-    Enum.reduce(data, array_len_encoded, fn field_value, acc ->
+    Enum.reduce(data, <<>>, fn field_value, acc ->
       acc <> encode_field(field_type, field_value)
     end)
   end

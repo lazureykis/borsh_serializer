@@ -40,9 +40,20 @@ defmodule Borsh.Decoder do
 
   # String
 
-  def read_value(<<string_length::little-integer-size(32), data::binary>>, :string) do
-    <<string::binary-size(string_length), rest::binary>> = <<data::binary>>
-    {string, rest}
+  def read_value(<<string_length::little-integer-size(32), data::binary>>, :string)
+      when string_length > 0 do
+    case <<data::binary>> do
+      <<string::binary-size(string_length)>> ->
+        {string, ""}
+
+      <<string::binary-size(string_length), rest::binary>> ->
+        {string, rest}
+    end
+  end
+
+  def read_value(<<string_length::little-integer-size(32), data::binary>>, :string)
+      when string_length == 0 do
+    {"", data}
   end
 
   # Binary
@@ -66,11 +77,6 @@ defmodule Borsh.Decoder do
 
   # Struct
 
-  # def read_value(<<data::binary>>, {:struct, module}) do
-  #   {value, rest} = decode_struct(data, module)
-  #   {value, rest}
-  # end
-
   def read_value(<<data::binary>>, {:struct, module}) do
     struct_schema = module.borsh_schema()
     result = struct(module)
@@ -86,10 +92,13 @@ defmodule Borsh.Decoder do
 
   # Fixed sized array
   def read_value(<<data::binary>>, {:array, field_type, array_length}) do
-    Enum.reduce(1..array_length, {[], data}, fn _, {values, data} ->
-      {value, rest} = read_value(data, field_type)
-      {values ++ [value], rest}
-    end)
+    {values, rest} =
+      Enum.reduce(1..array_length, {[], data}, fn _, {values, rest} ->
+        {value, rest_after_reading} = read_value(rest, field_type)
+        {[value | values], rest_after_reading}
+      end)
+
+    {values |> Enum.reverse(), rest}
   end
 
   # Dynamic sized array
