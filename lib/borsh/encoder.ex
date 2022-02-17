@@ -95,7 +95,7 @@ defmodule Borsh.Encoder do
   end
 
   def encode_field({:base58, len}, value) when is_binary(value) do
-    data = Borsh.Base58.decode(value)
+    data = Base58.decode(value)
     <<data::binary-size(len)>>
   end
 

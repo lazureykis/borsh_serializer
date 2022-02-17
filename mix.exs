@@ -11,7 +11,7 @@ defmodule Borsh.MixProject do
       source_url: @source_url,
       package: package(),
       version: "1.0.0",
-      elixir: "~> 1.8",
+      elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
@@ -46,7 +46,7 @@ defmodule Borsh.MixProject do
 
   defp deps do
     [
-      # {:b58, "~> 1.0.2"},
+      {:b58, "~> 1.0.2"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
