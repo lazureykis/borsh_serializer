@@ -10,7 +10,7 @@ defmodule Borsh.MixProject do
       description: "Borsh is a binary serializer for security-critical projects.",
       source_url: @source_url,
       package: package(),
-      version: "0.1.0",
+      version: "1.0.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),

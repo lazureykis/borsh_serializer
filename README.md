@@ -12,7 +12,7 @@ Add `borsh_serializer` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:borsh_serializer, "~> 0.1.0"}
+    {:borsh_serializer, "~> 1.0"}
   ]
 end
 ```
