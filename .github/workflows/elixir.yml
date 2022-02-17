@@ -30,7 +30,6 @@ jobs:
     - name: Restore dependencies cache
       uses: actions/cache@v2
       with:
-        path: deps
         path: |
           deps
           _build
