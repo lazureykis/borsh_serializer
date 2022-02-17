@@ -65,7 +65,7 @@ defmodule Borsh.Decoder do
 
   def read_value(<<data::binary>>, {:base58, byte_size}) do
     <<value_encoded::binary-size(byte_size), rest::binary>> = <<data::binary>>
-    value = Base58.encode(value_encoded)
+    value = Borsh.Base58.encode(value_encoded)
     {value, rest}
   end
 
