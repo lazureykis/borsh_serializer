@@ -1,11 +1,14 @@
 # Borsh binary serializer
 
+![Tests](https://github.com/lazureykis/borsh_serializer/actions/workflows/elixir.yml/badge.svg?branch=master)
 
 [Borsh](https://borsh.io) is a binary serializer for security-critical projects.
 
 `borsh_serializer` supports base58-encoded binary fields (Solana public keys as strings).
 
 ## Installation
+
+This library requires Elixir 1.11 or above.
 
 Add `borsh_serializer` to your list of dependencies in `mix.exs`:
 
