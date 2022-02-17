@@ -11,7 +11,7 @@ defmodule Borsh.MixProject do
       source_url: @source_url,
       package: package(),
       version: "1.0.0",
-      elixir: "~> 1.11",
+      elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
