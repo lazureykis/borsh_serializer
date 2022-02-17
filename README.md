@@ -1,7 +1,7 @@
 # Borsh binary serializer
 
 ![Tests](https://github.com/lazureykis/borsh_serializer/actions/workflows/elixir.yml/badge.svg?branch=master)
-[![Hex.pm](https://img.shields.io/hexpm/v/borsh_serializer.svg)]()
+[![Hex.pm](https://img.shields.io/hexpm/v/borsh_serializer.svg)](https://hex.pm/packages/borsh_serializer)
 
 [Borsh](https://borsh.io) is a binary serializer for security-critical projects.
 
