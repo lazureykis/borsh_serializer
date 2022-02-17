@@ -7,8 +7,7 @@
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `borsh_serializer` to your list of dependencies in `mix.exs`:
+Add `borsh_serializer` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
