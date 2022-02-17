@@ -1,5 +1,10 @@
 name: Tests
 
+strategy:
+  matrix:
+    elixir: [1.11.4, 1.12.3, 1.13.3]
+    otp: [22.3.4.24, 23.3.4.11, 24.2.1]
+
 on:
   push:
     branches: [ master ]
@@ -7,9 +12,9 @@ on:
     branches: [ master ]
 
 jobs:
-  elixir_111:
+  build_and_test:
 
-    name: Elixir 1.11
+    name: Build and test
     runs-on: ubuntu-latest
 
     steps:
@@ -17,49 +22,22 @@ jobs:
     - name: Set up Elixir
       uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
       with:
-        elixir-version: '1.11.0' # Define the elixir version [required]
-        otp-version: '23.0' # Define the OTP version [required]
+        # elixir-version: '1.11.0' # Define the elixir version [required]
+        # otp-version: '23.0' # Define the OTP version [required]
+        elixir-version: ${{ matrix.elixir }} # Define the elixir version [required]
+        otp-version: ${{ matrix.otp }} # Define the OTP version [required]
     - name: Restore dependencies cache
       uses: actions/cache@v2
       with:
         path: deps
-        key: ${{ runner.os }}-111-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-111-mix-
+        key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
     - name: Restore build cache
       uses: actions/cache@v2
       with:
         path: _build
-        key: ${{ runner.os }}-111-build-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-build-
-    - name: Install dependencies
-      run: mix deps.get
-    - name: Run tests
-      run: mix test
-
-  elixir_113:
-
-    name: Elixir 1.13
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Elixir
-      uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
-      with:
-        elixir-version: '1.13.0' # Define the elixir version [required]
-        otp-version: '24.0' # Define the OTP version [required]
-    - name: Restore dependencies cache
-      uses: actions/cache@v2
-      with:
-        path: deps
-        key: ${{ runner.os }}-113-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-113-mix-
-    - name: Restore build cache
-      uses: actions/cache@v2
-      with:
-        path: _build
-        key: ${{ runner.os }}-113-build-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-113-build-
+        key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-build-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-build-
     - name: Install dependencies
       run: mix deps.get
     - name: Run tests
