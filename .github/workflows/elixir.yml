@@ -1,0 +1,66 @@
+name: Elixir CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  elixir_111:
+
+    name: Elixir 1.11
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Elixir
+      uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
+      with:
+        elixir-version: '1.11.0' # Define the elixir version [required]
+        otp-version: '23.0' # Define the OTP version [required]
+    - name: Restore dependencies cache
+      uses: actions/cache@v2
+      with:
+        path: deps
+        key: ${{ runner.os }}-111-mix-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-111-mix-
+    - name: Restore build cache
+      uses: actions/cache@v2
+      with:
+        path: _build
+        key: ${{ runner.os }}-111-build-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-build-
+    - name: Install dependencies
+      run: mix deps.get
+    - name: Run tests
+      run: mix test
+
+  elixir_113:
+
+    name: Elixir 1.13
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Elixir
+      uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
+      with:
+        elixir-version: '1.13.0' # Define the elixir version [required]
+        otp-version: '24.0' # Define the OTP version [required]
+    - name: Restore dependencies cache
+      uses: actions/cache@v2
+      with:
+        path: deps
+        key: ${{ runner.os }}-113-mix-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-113-mix-
+    - name: Restore build cache
+      uses: actions/cache@v2
+      with:
+        path: _build
+        key: ${{ runner.os }}-113-build-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-113-build-
+    - name: Install dependencies
+      run: mix deps.get
+    - name: Run tests
+      run: mix test
