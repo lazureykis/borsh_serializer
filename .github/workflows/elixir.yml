@@ -1,10 +1,13 @@
-name: Tests
+name: master
 
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+
+env:
+  MIX_ENV: test
 
 jobs:
   build_and_test:
@@ -22,23 +25,20 @@ jobs:
     - name: Set up Elixir
       uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
       with:
-        # elixir-version: '1.11.0' # Define the elixir version [required]
-        # otp-version: '23.0' # Define the OTP version [required]
         elixir-version: ${{ matrix.elixir }} # Define the elixir version [required]
         otp-version: ${{ matrix.otp }} # Define the OTP version [required]
     - name: Restore dependencies cache
       uses: actions/cache@v2
       with:
         path: deps
+        path: |
+          deps
+          _build
         key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
-    - name: Restore build cache
-      uses: actions/cache@v2
-      with:
-        path: _build
-        key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-build-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-build-
     - name: Install dependencies
       run: mix deps.get
+    - name: Compile dependencies
+      run: mix deps.compile
     - name: Run tests
       run: mix test
