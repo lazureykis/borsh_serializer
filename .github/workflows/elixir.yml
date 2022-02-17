@@ -24,7 +24,13 @@ jobs:
       with:
         path: deps
         key: ${{ runner.os }}-111-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-mix-
+        restore-keys: ${{ runner.os }}-111-mix-
+    - name: Restore build cache
+      uses: actions/cache@v2
+      with:
+        path: _build
+        key: ${{ runner.os }}-111-build-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-build-
     - name: Install dependencies
       run: mix deps.get
     - name: Run tests
@@ -47,7 +53,13 @@ jobs:
       with:
         path: deps
         key: ${{ runner.os }}-113-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-mix-
+        restore-keys: ${{ runner.os }}-113-mix-
+    - name: Restore build cache
+      uses: actions/cache@v2
+      with:
+        path: _build
+        key: ${{ runner.os }}-113-build-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-113-build-
     - name: Install dependencies
       run: mix deps.get
     - name: Run tests
