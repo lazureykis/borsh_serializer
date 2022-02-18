@@ -10,7 +10,7 @@ defmodule Borsh.MixProject do
       description: "Borsh is a binary serializer for security-critical projects.",
       source_url: @source_url,
       package: package(),
-      version: "1.0.0",
+      version: "1.0.1",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,8 +19,8 @@ defmodule Borsh.MixProject do
         main: "readme",
         # logo: "logo.png",
         extras: [
-          "README.md"
-          # "CHANGELOG.md"
+          "README.md",
+          "CHANGELOG.md"
         ]
       ]
     ]
@@ -46,7 +46,7 @@ defmodule Borsh.MixProject do
 
   defp deps do
     [
-      {:b58, "~> 1.0.2"},
+      {:b58, "~> 1.0.2", only: [:dev, :test]},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]

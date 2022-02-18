@@ -16,7 +16,10 @@ Add `borsh_serializer` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:borsh_serializer, "~> 1.0"}
+    {:borsh_serializer, "~> 1.0"},
+
+    # Add :b58 if you need :base58 data type support
+    {:b58, "~> 1.0.2"},
   ]
 end
 ```
